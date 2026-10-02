@@ -13,14 +13,21 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-v19-512.png">
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
 <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=19.10">
+<link rel="stylesheet" href="styles.css?v=20.0">
 <title>烟迹</title>
 </head>
 <body>
 <div id="app">
   <div class="a2hs" id="a2hs"><span>可添加到主屏幕，之后像独立 App 一样打开；数据仍只保存在本机。</span><button id="a2hsClose" aria-label="关闭">✕</button></div>
   <main id="scroller">
-    <section id="page-today" class="page active">
+    <section id="page-quit" class="page active">
+      <header class="pg-head quit-head"><p class="brand">戒 烟</p><span class="quit-status" id="quitStatus">未开始</span></header>
+      <div class="quit-hero"><p class="quit-eyebrow">今天开始，给呼吸留出空间</p><p class="quit-label">已成功戒烟</p><div class="quit-days"><b id="quitDays">0</b><span>天</span></div><p class="quit-streak" id="quitStreak">记录一支烟后，从该时间开始计算</p></div>
+      <section class="breath-card"><header><div><span class="card-kicker">应对烟瘾</span><h2>4-7-8 呼吸法</h2></div><span class="breath-round" id="breathRound">准备开始</span></header><p class="breath-copy">坐直，闭嘴用鼻吸气；屏息；再从嘴缓慢呼气。吸气4秒 · 屏息7秒 · 呼气8秒，完成3组。</p><div class="breath-phase" id="breathPhase">准备</div><div class="breath-count" id="breathCount">—</div><div class="breath-progress"><i id="breathProgress"></i></div><div class="breath-actions"><button class="primary" id="breathStart">开始3组</button><button class="ghost" id="breathStop" hidden>停止</button></div></section>
+      <section class="quit-metrics"><div><b id="quitLongest">0</b><span>最长戒烟·天</span></div><div><b id="quitAvoided">0</b><span>累计少吸·支</span></div><div><b id="quitTar">0</b><span>少摄入焦油·mg</span></div><div><b id="quitNicotine">0</b><span>少摄入烟碱·mg</span></div><div><b id="quitCo">0</b><span>少摄入一氧化碳·mg</span></div><div><b id="quitSaved">0</b><span>累计节省·元</span></div></section>
+      <p class="quit-note" id="quitNote">按5支/天、每支1元估算；黄鹤楼软楼参数：焦油11mg、烟碱1.1mg、一氧化碳13mg。</p>
+    </section>
+    <section id="page-today" class="page">
       <header class="pg-head today-head"><h1 class="brand-big">烟迹<svg class="curl" viewBox="0 0 22 40" aria-hidden="true"><path d="M11 38 C 6 30 15 24 11 14 C 8 7 13 4 11 1"/></svg></h1><p class="head-date" id="todayDate"></p></header>
       <div class="today-hero"><div class="big"><span id="todayNum">0</span><span class="unit">支</span></div><p class="sub" id="todaySub">今日</p><div id="limitWrap"><div id="limitBar"><i></i></div></div><button id="limitMini" class="limit-mini">周期上限 · 未设置</button></div>
       <div class="stamp-wrap"><canvas id="fx" aria-hidden="true"></canvas><button class="stamp" id="stampBtn" aria-label="记录一支烟"><svg class="smoke" id="stampSmoke" viewBox="0 0 60 96" aria-hidden="true"><path class="base" d="M30 84 C 23 68 37 58 30 42 C 24 29 35 22 30 8"/><path class="rise r1" d="M30 84 C 23 68 37 58 30 42 C 24 29 35 22 30 8"/><path class="rise r2" d="M37 90 C 31 76 43 66 37 50"/></svg></button><div class="undo" id="undoPill"><span id="undoTime"></span><button id="undoBtn">撤销</button></div></div>
@@ -35,9 +42,9 @@
       <section class="secondary-analysis"><h3>工作日与周末</h3><p class="read" id="weekRead">长按柱体查看日均用量</p><canvas id="cvWeek"></canvas><p class="note" id="weekNote"></p></section>
     </section>
     <section id="page-history" class="page"><header class="pg-head"><p class="brand">历 史</p><div class="hdr-btns" id="histNormBtns"><button class="ghost-btn" id="btnBackfill">＋ 补记</button><button class="ghost-btn" id="btnManage">管理</button></div><div class="hdr-btns" id="histMgmtBtns" hidden><button class="ghost-btn" id="btnSelAll">全选</button><button class="ghost-btn" id="btnDone">完成</button></div></header><div id="histList"></div><button class="danger-wide" id="btnDelSel">删除所选（0）</button><button class="ghost-btn wide" id="histOlder">载入更早</button></section>
-    <section id="page-settings" class="page"><header class="pg-head"><p class="brand">设 置</p></header><button class="row-btn" id="limitOpen"><span>周期上限</span><span id="limitValue">未设置</span></button><p class="sec-t">数 据 <span id="setCount"></span></p><button class="row-btn" id="btnExport"><span>导出备份</span><span class="chev">›</span></button><button class="row-btn" id="btnImport"><span>导入备份</span><span class="chev">›</span></button><button class="row-btn danger" id="btnClear"><span>清空全部数据</span><span>›</span></button><div class="about"><p>数据只保存在这台设备的浏览器里，不上传服务器。PWA更新不会主动删除记录；更换设备或清理浏览器数据前请先导出备份。</p><p class="vpinfo" id="vpInfo"></p><p class="ver">烟 迹 · v19.10</p></div></section>
+      <section id="page-settings" class="page"><header class="pg-head"><p class="brand">设 置</p></header><button class="row-btn" id="limitOpen"><span>周期上限</span><span id="limitValue">未设置</span></button><p class="sec-t">数 据 <span id="setCount"></span></p><button class="row-btn" id="btnExport"><span>导出备份</span><span class="chev">›</span></button><button class="row-btn" id="btnImport"><span>导入备份</span><span class="chev">›</span></button><button class="row-btn danger" id="btnClear"><span>清空全部数据</span><span>›</span></button><div class="about"><p>数据只保存在这台设备的浏览器里，不上传服务器。PWA更新不会主动删除记录；更换设备或清理浏览器数据前请先导出备份。</p><p class="vpinfo" id="vpInfo"></p><p class="ver">烟 迹 · v20.0</p></div></section>
   </main>
-  <nav id="tabs"><button data-page="today" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>今日</button><button data-page="stats"><svg viewBox="0 0 24 24"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>分析</button><button data-page="history"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5V12l3 2"/></svg>历史</button><button data-page="settings"><svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9.5" cy="8" r="2.2"/><circle cx="14.5" cy="16" r="2.2"/></svg>设置</button></nav>
+  <nav id="tabs"><button data-page="quit" class="active"><svg viewBox="0 0 24 24"><path d="M12 20c-2.4-2.5-6.7-6.1-6.7-10.2A4.5 4.5 0 0 1 12 7.1a4.5 4.5 0 0 1 6.7 2.7C18.7 13.9 14.4 17.5 12 20Z"/><path d="M9 13.2c1.1-.2 1.8-1.1 1.8-2.1M11.4 15.3c1.4-.2 2.2-1.1 2.2-2.3"/></svg>戒烟</button><button data-page="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>今日</button><button data-page="stats"><svg viewBox="0 0 24 24"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>分析</button><button data-page="history"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5V12l3 2"/></svg>历史</button><button data-page="settings"><svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9.5" cy="8" r="2.2"/><circle cx="14.5" cy="16" r="2.2"/></svg>设置</button></nav>
 </div>
 <div class="mask" id="mask"></div>
 <div class="sheet" id="sheetLimit"><header><h4>周期上限</h4><button class="x" data-close>取消</button></header><div class="limit-fields"><label>周期<input type="number" id="limDaysIn" inputmode="numeric" min="1" max="7"><span>天</span></label><label>上限<input type="number" id="limCigsIn" inputmode="numeric" min="1" max="20"><span>支</span></label></div><label class="toggle-line"><input type="checkbox" id="limitOn">启用上限</label><button class="primary" id="limitSave">保 存</button></div>
@@ -46,7 +53,8 @@
 <div class="sheet" id="sheetImport"><header><h4>导入备份</h4><button class="x" data-close>取消</button></header><textarea id="importText" placeholder="粘贴备份 JSON 到这里……"></textarea><button class="primary" id="impText">导入粘贴内容</button><button class="ghost" id="impPaste">从剪贴板读取</button><button class="ghost" id="impFile">选择 JSON 文件</button></div>
 <div class="sheet" id="sheetConfirm"><header><h4 id="cfTitle"></h4></header><p class="cf-body" id="cfBody"></p><div class="cf-btns"><button class="ghost" id="cfCancel">取消</button><button class="primary" id="cfOk"></button></div></div>
 <div id="toast"></div><input type="file" id="fileImport" accept=".json,application/json" hidden>
-<script src="db.js?v=19.10"></script><script src="charts.js?v=19.10"></script><script src="app.js?v=19.10"></script>
+<script src="db.js?v=20.0"></script><script src="charts.js?v=20.0"></script><script src="app.js?v=20.0"></script>
 </body>
 </html>
+
 
