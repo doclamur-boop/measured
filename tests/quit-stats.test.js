@@ -45,8 +45,13 @@ test('完整日按5支基准、当前日按已过去时间比例计算',()=>{
 });
 
 test('连续10个完整零吸烟日约等于避免50支',()=>{
-  const anchor=Array.from({length:5},(_,i)=>event(at(2026,10,31,8+i),'2026-10-31'));
-  assert.equal(context.getCumulativeAvoided(anchor,at(2026,11,11,0)),50);
+  const anchor=Array.from({length:5},(_,i)=>event(at(2026,10,1,8+i),'2026-10-01'));
+  assert.equal(context.getCumulativeAvoided(anchor,at(2026,10,12,0)),50);
+});
+
+test('累计成果以2026年10月1日为固定首个计算日',()=>{
+  const anchor=Array.from({length:5},(_,i)=>event(at(2026,9,30,8+i),'2026-09-30'));
+  assert.equal(context.getCumulativeAvoided(anchor,at(2026,10,2,12)),7.5);
 });
 
 test('超过5支的自然日不产生负数，未来记录不进入统计',()=>{
