@@ -1,16 +1,16 @@
 {
-  "name":"烟迹",
-  "short_name":"烟迹",
-  "description":"极简、本地优先的个人吸烟记录与趋势观察工具",
+  "name":"节度 · Measured",
+  "short_name":"节度",
+  "description":"节度 · Measured：本地优先的烟酒节度管理工具",
   "start_url":"./",
   "scope":"./",
   "display":"standalone",
-  "background_color":"#F4EFE5",
-  "theme_color":"#29231F",
+  "background_color":"#F3F7FA",
+  "theme_color":"#0C2840",
   "orientation":"any",
   "icons":[
-    {"src":"icon-v19-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"icon-v19-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
+    {"src":"icon-v22-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icon-v22-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
   ]
 }
 
