@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='measured-v22.0';
+const VERSION='measured-v22.0.1';
 const CORE=['./','./index.html','./styles.css?v=22.0','./db.js?v=22.0','./charts.js?v=22.0','./app.js?v=22.0','./manifest.webmanifest','./icon-v22-192.png','./icon-v22-512.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)));});
 self.addEventListener('activate',e=>{e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))),self.clients.claim()]));});
