@@ -35,5 +35,6 @@ canvas{touch-action:pan-y}
 @media(max-width:360px){nav button{padding:8px 0 6px;font-size:11px;letter-spacing:.08em}nav svg{width:22px;height:22px;margin-bottom:3px}.brand{letter-spacing:.35em}.alcohol-metrics>div{padding-left:2px;padding-right:2px}.alcohol-metrics span{font-size:11px}}
 nav{background:rgba(243,247,250,.96)}.stamp{background:radial-gradient(circle at 50% 40%,#164B6B,#0C2840 72%)}.stamp::after{border-color:rgba(213,161,58,.55)}.smoke.hot path{stroke:var(--amber2)}
 html,body,#app{width:100%;max-width:100vw;min-width:0}#app{overflow:hidden}main{width:100%;min-width:0}nav{width:100%;max-width:520px}nav button{min-width:0;overflow:hidden}@media(max-width:430px){nav button{padding-left:0;padding-right:0;font-size:11px;letter-spacing:.04em}nav svg{width:21px;height:21px}}
+@media(max-width:600px){html,body{width:100vw;max-width:100vw;overflow-x:hidden}#app{left:0;right:0;width:100vw;max-width:100vw}nav{left:0;right:0;width:100vw;transform:none}}
 
 
