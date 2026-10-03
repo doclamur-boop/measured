@@ -83,11 +83,15 @@ test('首次实时饮酒以实际事件时间作为正式起点',async()=>{
   assert.equal(state(c).count,1);
 });
 
-test('历史页单纯补记在未开始时只保存记录不建立起点',async()=>{
-  const c=freshAlcoholContext(),ts=at(2026,9,20,20);
-  await vm.runInContext(`addAlcoholEvent(${ts},40,250,false)`,c);
-  assert.equal(state(c).start,null);
-  assert.equal(state(c).count,1);
+test('首次历史补记建立实际发生时间起点且更早补记不前移',async()=>{
+  const c=freshAlcoholContext(),first=at(2026,10,3,21),earlier=at(2026,10,1,20),now=at(2026,10,4,9);
+  await vm.runInContext(`addAlcoholEvent(${first},40,250)`,c);
+  assert.equal(state(c).start,first);
+  assert.equal(vm.runInContext(`getCurrentAlcoholFreeStreak(alcoholEvents,${now},prefs.alcoholTrackingStart)`,c),now-first);
+  await vm.runInContext(`addAlcoholEvent(${earlier},40,250)`,c);
+  assert.equal(state(c).start,first);
+  assert.equal(state(c).count,2);
+  assert.equal(vm.runInContext(`getCurrentAlcoholFreeStreak(alcoholEvents,${now},prefs.alcoholTrackingStart)`,c),now-first);
 });
 
 test('正式起点建立后补记更早事件不能移动起点',async()=>{

@@ -38,3 +38,5 @@ html,body,#app{width:100%;max-width:100vw;min-width:0}#app{overflow:hidden}main{
 @media(max-width:600px){html,body{width:100vw;max-width:100vw;overflow-x:hidden}#app{left:0;right:0;width:100vw;max-width:100vw}nav{left:0;right:0;width:100vw;transform:none}}
 
 
+/* Keep every alcohol-calendar row and cell on the same track, including leading placeholders. */
+.calendar-grid{grid-auto-rows:42px}.alcohol-day{height:42px;min-height:42px}
