@@ -17,7 +17,7 @@ const DAY=864e5;
 test('个人背景文案与累计成果基准均保留',()=>{
   assert.match(indexSource,/约4年/);
   assert.match(indexSource,/约5–10支\/天/);
-  assert.match(indexSource,/约8,000–13,000支/);
+  assert.match(indexSource,/约8,000–12,000支/);
   assert.match(indexSource,/约29岁/);
   assert.doesNotMatch(indexSource,/包年/);
   assert.match(indexSource,/5支\/天/);
@@ -43,7 +43,7 @@ test('长期风险模块使用总体人群相对继续吸烟的限定文案',()=
   assert.match(indexSource,/口腔 \/ 咽喉 \/ 喉癌.*5–10年/s);
   assert.match(indexSource,/肺癌.*10–15年/s);
   assert.match(indexSource,/↓约50%/g);
-  assert.match(indexSource,/约29岁、累计约8,000–13,000支时停止继续吸烟/);
+  assert.match(indexSource,/约29岁、累计约8,000–12,000支时停止继续吸烟/);
   assert.doesNotMatch(indexSource,/个人绝对肺癌概率|永久损伤概率|个人总发病概率减半/);
 });
 
@@ -53,4 +53,12 @@ test('戒烟页核心模块仍存在且移动布局保留响应式约束',()=>{
   assert.match(indexSource,/id="quitPhaseCopy"/);
   assert.match(stylesSource,/@media\(max-width:430px\)/);
   assert.match(indexSource,/class="quit-long-risk"/);
+});
+
+test('戒烟页顺序与呼吸标题去重符合v22.2.1',()=>{
+  const order=['quit-hero','breath-card','quit-background','quit-phase','recovery-card','quit-results','quit-long-risk'].map(token=>indexSource.indexOf(token));
+  assert.ok(order.every((pos,i)=>pos>=0&&(i===0||pos>order[i-1])));
+  assert.doesNotMatch(indexSource,/应对烟瘾/);
+  assert.equal((indexSource.match(/4-7-8呼吸法/g)||[]).length,1);
+  assert.doesNotMatch(indexSource,/4-7-8 呼吸法/);
 });
