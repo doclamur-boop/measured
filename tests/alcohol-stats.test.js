@@ -52,14 +52,11 @@ test('当前无酒间隔与最长无酒纪录分离',()=>{
   assert.equal(context.getLongestAlcoholFreeStreak(list,now,start),2);
 });
 
-test('未来饮酒事件不进入统计，恢复里程碑按当前无酒时间推进',()=>{
+test('未来饮酒事件不进入统计，当前连续无酒按真实时间推进',()=>{
   const start=at(2026,10,1),now=at(2026,10,2,13),future=event(at(2026,10,3,20),'2026-10-03');
   const summary=context.getAlcoholSummary([future],now,start);
   assert.equal(summary.drinkingDays,0);
   assert.equal(context.getCurrentAlcoholFreeStreak([future],now,start),now-start);
-  const recovery=context.getAlcoholRecoveryState(13*36e5);
-  assert.equal(recovery.current.label,'12小时');
-  assert.equal(recovery.next.label,'24小时');
 });
 
 test('日历分级边界为0、20、40克',()=>{
@@ -74,6 +71,13 @@ test('首次确认今天没喝酒从当天本地零点开始',async()=>{
   const c=freshAlcoholContext(),now=at(2026,10,4,21,15);
   await vm.runInContext(`ensureAlcoholTrackingStart(${now},'confirm')`,c);
   assert.equal(state(c).start,at(2026,10,4));
+});
+
+test('新用户首次进入戒酒页自动从当天零点开始',async()=>{
+  const c=freshAlcoholContext(),now=at(2026,10,4,21,15);
+  await vm.runInContext(`ensureAlcoholPageStart(${now})`,c);
+  assert.equal(state(c).start,at(2026,10,4));
+  assert.equal(state(c).count,0);
 });
 
 test('首次实时饮酒以实际事件时间作为正式起点',async()=>{

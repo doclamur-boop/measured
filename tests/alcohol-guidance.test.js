@@ -21,18 +21,18 @@ test('常饮酒换算值符合现有纯酒精公式',()=>{
   assert.ok(Math.abs(context.getPureAlcoholG(250,53)-104.5425)<1e-9);
 });
 
-test('今日控酒参考线正确处理0g、20g和50g边界',()=>{
+test('今日控酒目标正确处理0g、20g和50g边界',()=>{
   const now=at(2026,10,4,22);
   const none=context.getAlcoholTodayReference([],now,start);
   const line=context.getAlcoholTodayReference([event(at(2026,10,4,20),'2026-10-04',4.7,500)],now,start);
   const over=context.getAlcoholTodayReference([event(at(2026,10,4,20),'2026-10-04',12,250)],now,start);
   const high=context.getAlcoholTodayReference([event(at(2026,10,4,20),'2026-10-04',40,250)],now,start);
-  assert.equal(none.label,'今日无酒');
-  assert.equal(line.label,'在今日控酒参考线内');
+  assert.equal(none.label,'无酒');
+  assert.equal(line.label,'目标内');
   assert.ok(Math.abs(line.totalG-18.5415)<1e-9);
-  assert.equal(context.alcoholReferenceLabel(20),'在今日控酒参考线内');
-  assert.equal(over.label,'已超过今日控酒参考线');
-  assert.equal(high.label,'达到大量饮酒警戒水平');
+  assert.equal(context.getAlcoholDayStatus(20),'目标内');
+  assert.equal(over.label,'超过目标');
+  assert.equal(high.label,'大量饮酒警戒');
 });
 
 test('月度目标按自然月独立统计，不继承上月未使用部分',()=>{
@@ -60,9 +60,9 @@ test('过去365天与前365天同比按累计纯酒精计算',()=>{
 });
 
 test('控酒参考文案不使用安全量、允许量或剩余额度措辞',()=>{
-  assert.match(indexSource,/今日控酒参考/);
+  assert.match(indexSource,/今日控酒目标/);
   assert.match(indexSource,/月度控酒目标/);
-  assert.match(source,/达到大量饮酒警戒水平/);
+  assert.match(source,/大量饮酒警戒/);
   assert.doesNotMatch(indexSource,/安全饮酒量|允许饮酒量|今天还能喝|剩余额度/);
 });
 
@@ -72,4 +72,17 @@ test('既有30日戒酒统计口径仍由原函数提供',()=>{
   assert.equal(summary.drinkingDays,1);
   assert.equal(summary.denominator,4);
   assert.ok(Math.abs(summary.totalG-78.9)<1e-9);
+});
+
+test('自然日计数跨月跨年按本地日期递增，不依赖固定24小时差值',()=>{
+  assert.equal(context.countLocalDays(at(2026,12,31),at(2027,1,3)),3);
+  assert.equal(context.countLocalDays(at(2026,10,1),at(2026,10,4)),3);
+});
+
+test('v22.4戒酒页删除每日确认和恢复窗口，并保留月份选择器',()=>{
+  assert.doesNotMatch(indexSource,/alcoholNoDrink|今天没喝酒|恢复窗口/);
+  assert.match(indexSource,/id="alcoholMonthPrev"/);
+  assert.match(indexSource,/id="alcoholMonthNext"/);
+  assert.match(indexSource,/月度控酒成果/);
+  assert.match(source,/function getAlcoholDayStatus/);
 });

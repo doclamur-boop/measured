@@ -48,16 +48,17 @@ test('长期风险模块使用总体人群相对继续吸烟的限定文案',()=
 });
 
 test('戒烟页核心模块仍存在且移动布局保留响应式约束',()=>{
-  ['quitDays','breathStart','recoveryTitle','quitAvoided','quitAvoidedDays','quitSaved','quitLongest','quitTar','quitNicotine','quitCo'].forEach(id=>assert.match(indexSource,new RegExp(`id="${id}"`)));
+  ['quitDays','breathStart','quitAvoided','quitAvoidedDays','quitSaved','quitLongest','quitTar','quitNicotine','quitCo'].forEach(id=>assert.match(indexSource,new RegExp(`id="${id}"`)));
   assert.match(indexSource,/id="quitPhaseTitle"/);
   assert.match(indexSource,/id="quitPhaseCopy"/);
   assert.match(stylesSource,/@media\(max-width:430px\)/);
   assert.match(indexSource,/class="quit-long-risk"/);
 });
 
-test('戒烟页顺序与呼吸标题去重符合v22.2.1',()=>{
-  const order=['quit-hero','breath-card','quit-background','quit-phase','recovery-card','quit-results','quit-long-risk'].map(token=>indexSource.indexOf(token));
+test('戒烟页顺序与呼吸标题去重符合v22.4',()=>{
+  const order=['quit-hero','breath-card','quit-background','quit-phase','quit-results','quit-long-risk'].map(token=>indexSource.indexOf(token));
   assert.ok(order.every((pos,i)=>pos>=0&&(i===0||pos>order[i-1])));
+  assert.doesNotMatch(indexSource,/recovery-card|recoveryTitle|近期身体恢复/);
   assert.doesNotMatch(indexSource,/应对烟瘾/);
   assert.equal((indexSource.match(/4-7-8呼吸法/g)||[]).length,1);
   assert.doesNotMatch(indexSource,/4-7-8 呼吸法/);

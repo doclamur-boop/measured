@@ -80,13 +80,6 @@ test('跨午夜按事件时间计算连续间隔，避免把日期标签当作�
   assert.equal(context.getLongestStreak([a,b],b.t),0);
 });
 
-test('恢复时间线输出时间进度而非个人风险百分比',()=>{
-  const state=context.getRecoveryState(25*60e3);
-  assert.equal(state.current.label,'20分钟');
-  assert.equal(state.next.label,'24小时');
-  assert.ok(state.progress>=0&&state.progress<100);
-});
-
 test('导出JSON往返保留事件与固定参数',()=>{
   const exportContext=makeContext();
   vm.createContext(exportContext);
