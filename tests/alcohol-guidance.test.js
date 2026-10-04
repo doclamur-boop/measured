@@ -85,4 +85,5 @@ test('v22.4戒酒页删除每日确认和恢复窗口，并保留月份选择器
   assert.match(indexSource,/id="alcoholMonthNext"/);
   assert.match(indexSource,/月度控酒成果/);
   assert.match(source,/function getAlcoholDayStatus/);
+  assert.doesNotMatch(indexSource,/alcoholMonthStats/);
 });
