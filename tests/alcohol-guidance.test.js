@@ -59,7 +59,7 @@ test('过去365天与前365天同比按累计纯酒精计算',()=>{
   assert.equal(context.getAlcoholYearTrend([list[2]],now,at(2024,1,1)).comparePct,null);
 });
 
-test('控酒参考文案不使用安全量、允许量或剩余额度措辞',()=>{
+test('控酒文案不使用安全量、允许量或剩余额度措辞',()=>{
   assert.match(indexSource,/今日控酒目标/);
   assert.match(indexSource,/月度控酒目标/);
   assert.match(source,/大量饮酒警戒/);
@@ -79,7 +79,7 @@ test('自然日计数跨月跨年按本地日期递增，不依赖固定24小时
   assert.equal(context.countLocalDays(at(2026,10,1),at(2026,10,4)),3);
 });
 
-test('v22.4戒酒页删除每日确认和恢复窗口，并保留月份选择器',()=>{
+test('戒酒页删除每日确认和恢复窗口，并保留月份选择器',()=>{
   assert.doesNotMatch(indexSource,/alcoholNoDrink|今天没喝酒|恢复窗口/);
   assert.match(indexSource,/id="alcoholMonthPrev"/);
   assert.match(indexSource,/id="alcoholMonthNext"/);
@@ -87,6 +87,8 @@ test('v22.4戒酒页删除每日确认和恢复窗口，并保留月份选择器
   assert.match(source,/function getAlcoholDayStatus/);
   assert.doesNotMatch(indexSource,/alcoholMonthStats/);
   assert.match(source,/if\(name==='alcohol'\)\{ensureAlcoholPageStart\(Date\.now\(\)\);renderAlcohol\(\);\}/);
+  const renderAlcoholBlock=source.slice(source.indexOf('function renderAlcohol(){'),source.indexOf('function openSheet'));
+  assert.doesNotMatch(renderAlcoholBlock,/ensureAlcoholPageStart/);
   const calendarBlock=source.slice(source.indexOf('function renderAlcoholCalendar'),source.indexOf('function showAlcoholDay'));
   assert.doesNotMatch(calendarBlock,/ensureAlcoholPageStart/);
 });

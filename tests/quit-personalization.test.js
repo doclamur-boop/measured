@@ -42,6 +42,12 @@ test('长期风险模块使用总体人群相对继续吸烟的限定文案',()=
   assert.match(indexSource,/冠心病.*3–6年/s);
   assert.match(indexSource,/口腔 \/ 咽喉 \/ 喉癌.*5–10年/s);
   assert.match(indexSource,/肺癌.*10–15年/s);
+  const coronaryCard=indexSource.match(/<article><div><b>冠心病<\/b><\/div><div class="quit-risk-multi">[\s\S]*?<\/article>/)?.[0];
+  assert.ok(coronaryCard);
+  assert.match(coronaryCard,/3–6年[\s\S]*额外风险约↓50%/);
+  assert.match(coronaryCard,/约15年[\s\S]*接近不吸烟者/);
+  const legacyRiskClass=['risk','double'].join('-');
+  assert.doesNotMatch(indexSource,new RegExp(legacyRiskClass));
   assert.match(indexSource,/↓约50%/g);
   assert.match(indexSource,/约29岁、累计约8,000–12,000支时停止继续吸烟/);
   assert.doesNotMatch(indexSource,/个人绝对肺癌概率|永久损伤概率|个人总发病概率减半/);
@@ -55,7 +61,7 @@ test('戒烟页核心模块仍存在且移动布局保留响应式约束',()=>{
   assert.match(indexSource,/class="quit-long-risk"/);
 });
 
-test('戒烟页顺序与呼吸标题去重符合v22.4',()=>{
+test('戒烟页顺序与呼吸标题去重符合当前版本',()=>{
   const order=['quit-hero','breath-card','quit-background','quit-phase','quit-results','quit-long-risk'].map(token=>indexSource.indexOf(token));
   assert.ok(order.every((pos,i)=>pos>=0&&(i===0||pos>order[i-1])));
   assert.doesNotMatch(indexSource,/recovery-card|recoveryTitle|近期身体恢复/);
