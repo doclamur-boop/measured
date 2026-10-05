@@ -32,6 +32,22 @@ test('纯酒精公式正确',()=>{
   assert.ok(Math.abs(context.getPureAlcoholG(250,40)-78.9)<1e-9);
 });
 
+test('戒酒起点可解析指定年月日时分并拒绝未来时间',()=>{
+  const now=at(2026,10,5,12),chosen=at(2026,10,3,21,15);
+  assert.equal(context.parseAlcoholStartInput('2026-10-03T21:15',now),chosen);
+  assert.equal(context.parseAlcoholStartInput('2026-10-05T12:01',now),null);
+  assert.equal(context.parseAlcoholStartInput('',now),null);
+});
+
+test('修改戒酒起点后起点前事件被排除、起点后事件和派生统计重算',()=>{
+  const before=event(at(2026,10,2,20),'2026-10-02'),after=event(at(2026,10,4,20),'2026-10-04'),now=at(2026,10,5,12),newStart=at(2026,10,3,21);
+  const month=context.getAlcoholMonthStats([before,after],now,newStart),streak=context.getCurrentAlcoholFreeStreak([before,after],now,newStart),reduction=context.getAlcoholReductionStats([before,after],now,newStart);
+  assert.equal(month.drinkingDays,1);
+  assert.equal(month.totalG,78.9);
+  assert.equal(streak,now-after.t);
+  assert.equal(reduction.actualG,78.9);
+});
+
 test('无追踪起点时不产生虚假无酒率或连续无酒时间',()=>{
   const history=[event(at(2026,9,20,20),'2026-09-20')],now=at(2026,10,4,12),summary=context.getAlcoholSummary(history,now,null);
   assert.equal(summary.tracking,false);

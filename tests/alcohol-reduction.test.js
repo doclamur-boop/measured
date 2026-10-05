@@ -58,18 +58,18 @@ test('模块位于饮酒操作之后且不引入禁止文案',()=>{
   assert.doesNotMatch(indexSource,/安全饮酒量|允许饮酒量|今天还能喝|剩余额度|身体少吸收|健康收益|已恢复\d+%/);
 });
 
-test('版本统一为v22.5且不残留旧基准',()=>{
+test('版本统一为v22.6且不残留旧基准',()=>{
   const swSource=fs.readFileSync(path.join(__dirname,'..','sw.js'),'utf8');
-  assert.match(indexSource,/styles\.css\?v=22\.5/);
-  assert.match(indexSource,/db\.js\?v=22\.5/);
-  assert.match(indexSource,/charts\.js\?v=22\.5/);
-  assert.match(indexSource,/app\.js\?v=22\.5/);
-  assert.match(indexSource,/节度 · Measured · v22\.5/);
-  assert.match(source,/sw\.js\?v=22\.5/);
-  assert.match(swSource,/measured-v22\.5/);
-  assert.match(swSource,/styles\.css\?v=22\.5/);
-  assert.match(swSource,/db\.js\?v=22\.5/);
-  assert.match(swSource,/charts\.js\?v=22\.5/);
-  assert.match(swSource,/app\.js\?v=22\.5/);
+  assert.match(indexSource,/styles\.css\?v=22\.6/);
+  assert.match(indexSource,/db\.js\?v=22\.6/);
+  assert.match(indexSource,/charts\.js\?v=22\.6/);
+  assert.match(indexSource,/app\.js\?v=22\.6/);
+  assert.match(indexSource,/节度 · Measured · v22\.6/);
+  assert.match(source,/sw\.js\?v=22\.6/);
+  assert.match(swSource,/measured-v22\.6/);
+  assert.match(swSource,/styles\.css\?v=22\.6/);
+  assert.match(swSource,/db\.js\?v=22\.6/);
+  assert.match(swSource,/charts\.js\?v=22\.6/);
+  assert.match(swSource,/app\.js\?v=22\.6/);
   assert.doesNotMatch(indexSource,/10\.1kg|27\.7g/);
 });

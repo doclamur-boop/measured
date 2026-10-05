@@ -37,11 +37,29 @@ test('今日控酒目标正确处理0g、20g和50g边界',()=>{
 
 test('月度目标按自然月独立统计，不继承上月未使用部分',()=>{
   const list=[event(at(2026,10,31,20),'2026-10-31',40,250),event(at(2026,11,1,20),'2026-11-01',4.7,500)];
-  const month=context.getAlcoholMonthStats(list,at(2026,11,2,12),start);
+  const month=context.getAlcoholMonthStats(list,at(2026,11,3,12),start);
   assert.ok(Math.abs(month.totalG-18.5415)<1e-9);
   assert.equal(month.drinkingDays,1);
   assert.equal(month.freeDays,1);
   assert.ok(Math.abs(month.highestG-18.5415)<1e-9);
+});
+
+test('月度无酒率只统计已完成无酒日和饮酒日',()=>{
+  const start=at(2026,10,3,21),drink=event(start,'2026-10-03',9,200),now=at(2026,10,5,12),month=context.getAlcoholMonthStats([drink],now,start);
+  assert.equal(month.drinkingDays,1);
+  assert.equal(month.freeDays,1);
+  assert.equal(month.dayCount,2);
+  assert.equal(month.freeRate,.5);
+});
+
+test('今天发生饮酒时立即计入饮酒日，今天无酒不计无酒日',()=>{
+  const start=at(2026,10,1),now=at(2026,10,5,12),drink=event(at(2026,10,5,10),'2026-10-05',9,200),withDrink=context.getAlcoholMonthStats([drink],now,start),withoutDrink=context.getAlcoholMonthStats([],now,start);
+  assert.equal(withDrink.drinkingDays,1);
+  assert.equal(withDrink.freeDays,4);
+  assert.equal(withDrink.freeRate,.8);
+  assert.equal(withoutDrink.drinkingDays,0);
+  assert.equal(withoutDrink.freeDays,4);
+  assert.equal(withoutDrink.freeRate,1);
 });
 
 test('过去365天与前365天同比按累计纯酒精计算',()=>{
@@ -91,4 +109,14 @@ test('戒酒页删除每日确认和恢复窗口，并保留月份选择器',()=
   assert.doesNotMatch(renderAlcoholBlock,/ensureAlcoholPageStart/);
   const calendarBlock=source.slice(source.indexOf('function renderAlcoholCalendar'),source.indexOf('function showAlcoholDay'));
   assert.doesNotMatch(calendarBlock,/ensureAlcoholPageStart/);
+});
+
+test('戒酒起点入口为可点击按钮并保存后立即重算',()=>{
+  assert.match(indexSource,/button class="alcohol-status" id="alcoholStatus"/);
+  assert.match(indexSource,/id="sheetAlcoholStart"/);
+  assert.match(indexSource,/id="alcoholStartInput"/);
+  assert.match(indexSource,/id="alcoholStartSave"/);
+  assert.match(source,/修改后将重新计算戒酒相关数据/);
+  assert.match(source,/prefs\.alcoholTrackingStart=ts;await DB\.setPref\('limit',prefs\);closeSheet\(\);renderAll\(\)/);
+  assert.match(source,/\$\('#alcoholStatus'\)\.onclick=openAlcoholStart/);
 });
