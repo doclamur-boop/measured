@@ -22,8 +22,8 @@ test('个人背景文案与累计成果基准均保留',()=>{
   assert.doesNotMatch(indexSource,/包年/);
   assert.match(indexSource,/5支\/天/);
   assert.match(indexSource,/累计避免吸烟·支/);
-  assert.match(indexSource,/相当于过去的吸烟日/);
-  assert.match(indexSource,/累计节省·元/);
+
+
 });
 
 test('当前恢复阶段按无烟时长切换且不计算恢复百分比',()=>{
@@ -54,7 +54,7 @@ test('长期风险模块使用总体人群相对继续吸烟的限定文案',()=
 });
 
 test('戒烟页核心模块仍存在且移动布局保留响应式约束',()=>{
-  ['quitDays','breathStart','quitAvoided','quitAvoidedDays','quitSaved','quitLongest','quitTar','quitNicotine','quitCo'].forEach(id=>assert.match(indexSource,new RegExp(`id="${id}"`)));
+  ['quitDays','breathStart','quitAvoided','quitLongest','quitTar','quitNicotine','quitCo'].forEach(id=>assert.match(indexSource,new RegExp(`id="${id}"`)));
   assert.match(indexSource,/id="quitPhaseTitle"/);
   assert.match(indexSource,/id="quitPhaseCopy"/);
   assert.match(stylesSource,/@media\(max-width:430px\)/);
@@ -62,10 +62,26 @@ test('戒烟页核心模块仍存在且移动布局保留响应式约束',()=>{
 });
 
 test('戒烟页顺序与呼吸标题去重符合当前版本',()=>{
-  const order=['quit-hero','breath-card','quit-background','quit-phase','quit-results','quit-long-risk'].map(token=>indexSource.indexOf(token));
+  const order=['quit-hero','quit-results','breath-card','quit-background','quit-phase','quit-long-risk'].map(token=>indexSource.indexOf(token));
   assert.ok(order.every((pos,i)=>pos>=0&&(i===0||pos>order[i-1])));
   assert.doesNotMatch(indexSource,/recovery-card|recoveryTitle|近期身体恢复/);
   assert.doesNotMatch(indexSource,/应对烟瘾/);
   assert.equal((indexSource.match(/4-7-8呼吸法/g)||[]).length,1);
   assert.doesNotMatch(indexSource,/4-7-8 呼吸法/);
+});
+
+test('累计成果只显示避免支数和最长天数，详细烟气数据保留且渲染无缺失DOM',()=>{
+  const card=indexSource.slice(indexSource.indexOf('<section class="quit-results">'),indexSource.indexOf('<section class="breath-card">'));
+  const metrics=card.slice(card.indexOf('<div class="quit-metrics">'),card.indexOf('<details'));
+  assert.deepEqual(Array.from(metrics.matchAll(/id="([^"]+)"/g),m=>m[1]),['quitAvoided','quitLongest']);
+  assert.match(metrics,/累计避免吸烟·支/);
+  assert.match(metrics,/最长连续无烟·天/);
+  assert.match(card,/详细数据 · 标称烟气释放量估算/);
+  ['焦油·mg','烟碱·mg','一氧化碳·mg'].forEach(label=>assert.ok(card.includes(label)));
+  const elements=Object.fromEntries(Array.from(indexSource.matchAll(/id="([^"]+)"/g),m=>['#'+m[1],{style:{}}]));
+  context.document.querySelector=selector=>{assert.ok(elements[selector],`render references absent DOM: ${selector}`);return elements[selector];};
+  context.renderQuit();
+  assert.equal(elements['#quitAvoided'].textContent,'0');
+  assert.equal(elements['#quitLongest'].textContent,0);
+  ['#quitTar','#quitNicotine','#quitCo'].forEach(selector=>assert.equal(elements[selector].textContent,'0'));
 });
